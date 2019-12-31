@@ -12,7 +12,7 @@ vim-in-esv provides an 'ESV' command, and an operator mapping. Both can be used 
 
 To use the 'ESV' command, enter 
 ```
-:ESV *passage reference*
+:ESV <passage_reference>
 ```
 in the Vim command line.
 For example, 
@@ -23,7 +23,7 @@ Abbreviations of book names are supported, such as
 ```
 :ESV Jn 3:16
 ```
-For details what references are supported, refer to the [ESV API webpage](https://api.esv.org/docs/passage-text/).
+For details on what references are supported, refer to the [ESV API webpage](https://api.esv.org/docs/passage-text/).
 
 The operator is called with `<Leader>bb` by default. To use it, enter
 ```
