@@ -5,14 +5,25 @@ if !has('python3')
 endif
 
 py3 from passage import get_esv_text
-" TODO [2019-12-30]: fix import!
-" for now, place passage.py in {rtp}/python3/
-"  eg. .vim/python3/
+" passage.py should be in {rtp}/python3/  
 
 function! s:esv_buffer(passage)
 " puts a requested ESV Bible passage in vim buffer"
 
-" move focus to 'passages' buffer"
+py3 << EOF
+b = vim.current.buffer
+passage_texts = get_esv_text(vim.eval("a:passage"))
+b.vars['passage_texts'] = passage_texts
+EOF
+
+  " if error encountered, 
+  " print it in vim cmd line, and exit
+  if b:passage_texts =~ '^Error'
+    echo b:passage_texts
+    return
+  endif 
+
+  " move focus to 'passages' buffer"
   let esv_split = s:get_split_cmd()
   if bufwinnr('passages') <= 0
     exec esv_split.' '.'passages'
@@ -33,7 +44,6 @@ if not is_first_entry:
     b.append(l)
 
 # put text(s) in 'passages' buffer
-passage_texts = get_esv_text(vim.eval("a:passage"))
 passage_lines = passage_texts.splitlines()
 for l in passage_lines:
   b.append(l)
