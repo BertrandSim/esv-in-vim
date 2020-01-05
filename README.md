@@ -52,7 +52,11 @@ cd ~/.vim/pack/bundle
 git clone https://github.com/BertrandSim/esv-in-vim.git
 ```
 
-2. Paste your ESV API key in the file `esv_api_key` (do not include any quotes).
+2. Add your ESV API key to the global variable `g:esv_api_key`. For example, if your key is '0123xxx', add
+```
+let g:esv_api_key = '0123xxx'
+```
+in your vimrc. (Your key should be surrounded with quotes.)
 
 ## Customizing
 The operator mapping is bound to `<Leader>bb` by default. To change this, provide a mapping to `<Plug>(esv-in-vim)`. For example, if you wish to use `gb` (short for "get-bible") instead, add

@@ -7,7 +7,9 @@
 # 2019-12-29: same as code from https://api.esv.org/docs/samples/
 # 2019-12-30: allowed multiple passages, add passage-refs
 # 2019-12-31: read API_KEY from external file
+# 2020-01-06: read API_KEY from vim global variable (g:__)
 
+import vim
 import sys
 import requests
 import os
@@ -20,7 +22,7 @@ packdir = os.path.dirname(filedir)
 # print(fileabspath)
 # print(packdir)
 
-API_KEY = open(os.path.join(packdir,'esv_api_key'), 'r').read().rstrip()
+API_KEY = vim.vars['esv_api_key']
 # print(API_KEY)
 API_URL = 'https://api.esv.org/v3/passage/text/'
 

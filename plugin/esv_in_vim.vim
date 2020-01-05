@@ -4,6 +4,12 @@ if !has('python3')
   finish
 endif
 
+" check esv_api_key
+if !get(g:, "esv_api_key")
+  echoerr "'g:esv_api_key' not specified"
+  finish
+endif
+
 py3 from passage import get_esv_text
 " passage.py should be in {rtp}/python3/  
 
