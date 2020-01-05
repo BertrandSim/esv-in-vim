@@ -112,8 +112,8 @@ function! s:optype2v(type)
 endfunction
 
 " enduser
-nnoremap <Plug>(esv_in_vim) :<C-u>set opfunc=<SID>esv_buf_op<CR>g@
-vnoremap <Plug>(esv_in_vim) :<C-u>call <SID>esv_buf_op(visualmode(), 1)<CR>
+nnoremap <silent> <Plug>(esv_in_vim) :<C-u>set opfunc=<SID>esv_buf_op<CR>g@
+vnoremap <silent> <Plug>(esv_in_vim) :<C-u>call <SID>esv_buf_op(visualmode(), 1)<CR>
 
 if !hasmapto('<Plug>(esv_in_vim)', 'n')
   nmap <Leader>bb <Plug>(esv_in_vim)
