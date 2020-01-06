@@ -1,11 +1,13 @@
 ## Plugin
 esv-in-vim: Read the ESV Bible in vim. 
-Enter a Bible reference via the command line, or view an existing reference in a vim window.
+Enter a new Bible reference via the command line, or lookup an existing reference via `\bb`.
 
 ## Requirements
 
 - Vim, with python3 support
 - An ESV API key; get one [here](https://api.esv.org/account/create-application/)
+
+Vim uses the *python requests module* and the *API key* to get passages from [api.esv.org](api.esv.org).
 
 ## Usage
 vim-in-esv provides an 'ESV' command, and an operator mapping. Both can be used to view a passage reference of choice.
@@ -69,6 +71,6 @@ to your vimrc.
 window splits options: [TODO]
 
 ## Contributing
-[TODO]
+Contact me on [github](https://github.com/BertrandSim/esv-in-vim).
 
 
