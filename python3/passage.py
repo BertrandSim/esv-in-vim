@@ -12,17 +12,23 @@
 import vim
 import sys
 import requests
-import os
 
-fileabspath = os.path.abspath(__file__)
-filedir = os.path.dirname(fileabspath)
-packdir = os.path.dirname(filedir)
+# helper func
+def get_vim_esv_key():
+  vim_enc_save = vim.options['encoding']
+  vim.options['encoding'] = 'UTF-8'
 
-# print(os.getcwd()) 
-# print(fileabspath)
-# print(packdir)
+  try:
+    esv_key = vim.vars['esv_api_key'].decode('UTF-8')
+    return esv_key
+  except KeyError:
+    print("Error while looking for 'g:esv_api_key'")
+  finally: 
+    vim.options['encoding'] = vim_enc_save
 
-API_KEY = vim.vars['esv_api_key']
+
+# main
+API_KEY = get_vim_esv_key()
 # print(API_KEY)
 API_URL = 'https://api.esv.org/v3/passage/text/'
 

@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 " check if +python3
 if !has('python3') 
   echoerr "python 3 is required"
@@ -6,9 +8,10 @@ endif
 
 " check esv_api_key
 if !get(g:, "esv_api_key")
-  echoerr "'g:esv_api_key' not specified"
+  echoerr "'g:esv_api_key' is not defined"
   finish
 endif
+
 
 py3 from passage import get_esv_text
 " passage.py should be in {rtp}/python3/  
@@ -124,6 +127,3 @@ if !hasmapto('<Plug>(esv_in_vim)', 'v')
 endif
 
 command! -nargs=+ ESV call s:esv_buffer('<args>')
-
-
-
