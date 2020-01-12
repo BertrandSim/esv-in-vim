@@ -44,6 +44,7 @@ EOF
 py3 << EOF
 b = vim.current.buffer
 is_first_entry = len(b[:]) == 1 and b[0] == ''
+w = vim.current.window
 
 # add seperator if other passages exist
 if not is_first_entry:
@@ -52,18 +53,20 @@ if not is_first_entry:
   for l in passages_sep_l:
     b.append(l)
 
+prev_line = len(b)
+
 # put text(s) in 'passages' buffer
 passage_lines = passage_texts.splitlines()
 for l in passage_lines:
   b.append(l)
 
+# place cursor on first passage ref
+w.cursor = (prev_line + 1, 0)
+
 # delete leading blank line
 if is_first_entry:
   del b[0]   
 EOF
-
-" view requested passages
-normal! G
 
 endfunction
 
