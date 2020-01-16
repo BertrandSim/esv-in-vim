@@ -91,29 +91,33 @@ endfunction
 
 function! s:get_split_cmd()
   let esv_split = get(g:, 'esv_split', 'v')
-  if     esv_split == 'h' || esv_split == 'horizontal'
-    return 'split'
-  elseif esv_split == 'v' || esv_split == 'vertical'
-    return 'vsplit'
-  elseif esv_split == 't' || esv_split == 'tabpage'
-    return 'tabe'
+
+  let splitcmd = esv_split == 'h' || esv_split == 'horizontal' ? 'split'  :
+    \            esv_split == 'v' || esv_split == 'vertical'   ? 'vsplit' :
+    \            esv_split == 't' || esv_split == 'tabpage'    ? 'tabe'   :
+    \            esv_split == 'p' || esv_split == 'preview'    ? ''       :
+    \ 'default'
     " TODO [2019-12-30]: check tab split option
-  elseif esv_split == 'p' || esv_split == 'preview'
     " TODO [2019-12-30] add preview split
-  else
+  
+  if splitcmd ==# 'default'
     echoerr '"g:esv_split" type should be one of "p/h/v/t".' 
+  else
+    return splitcmd
+  endif
 endfunction
 
 function! s:optype2v(type)
   " converts first arg in opfunc() to v/V/^V
-  if a:type ==# 'char'  || a:type ==# 'v' 
-    return 'v'
-  elseif a:type ==# 'line'  || a:type ==# 'V' 
-    return 'V'
-  elseif a:type ==# 'block' || a:type ==# '' 
-    return ''
-  else
+  let vtype = a:type ==# 'char'  || a:type ==# 'v' ? 'v' :
+    \         a:type ==# 'line'  || a:type ==# 'V' ? 'V' :
+    \         a:type ==# 'block' || a:type ==#'' ?'' : 
+    \ 'default'
+
+  if vtype ==# 'default' 
     echoerr "type should be 'char', 'line', or 'block'."
+  else 
+    return vtype
   endif
 endfunction
 
