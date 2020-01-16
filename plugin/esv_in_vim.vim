@@ -35,7 +35,7 @@ EOF
   " move focus to 'passages' buffer"
   let esv_split = s:get_split_cmd()
   if bufwinnr('passages') <= 0
-    exec esv_split.' '.'passages'
+    exec 'noswapfile '.esv_split.' passages'
     " TODO [2019-12-30]: split options
   endif
   let buf_num = bufwinnr('passages')
