@@ -37,6 +37,7 @@ EOF
   if bufwinnr('passages') <= 0
     exec 'noswapfile '.esv_split.' passages'
     " TODO [2019-12-30]: split options
+    call s:concealInit()
   endif
   let buf_num = bufwinnr('passages')
   exec buf_num.'wincmd w'
@@ -121,7 +122,7 @@ function! s:optype2v(type)
   endif
 endfunction
 
-" enduser
+" enduser {{{1
 nnoremap <silent> <Plug>(esv_in_vim) :<C-u>set opfunc=<SID>esv_buf_op<CR>g@
 vnoremap <silent> <Plug>(esv_in_vim) :<C-u>call <SID>esv_buf_op(visualmode(), 1)<CR>
 
@@ -134,3 +135,51 @@ if !hasmapto('<Plug>(esv_in_vim)', 'v')
 endif
 
 command! -nargs=+ ESV call s:esv_buffer('<args>')
+
+command! ToggleVerseNum call s:toggleGroupConceal('esvVerseNum')
+
+
+" conceal {{{1
+function! s:concealInit()
+" called to setup conceal for window containing passages
+  set conceallevel=2
+  set concealcursor=nc
+
+  " conceal verse numbers by default
+  syntax match esvVerseNum '\V[\d\+]' conceal
+  hi link esvVerseNum Number
+endfunction
+
+
+function! s:toggleGroupConceal(group)
+  " toggle conceal of a match group
+  " from https://stackoverflow.com/questions/3853631/toggling-the-concealed-attribute-for-a-syntax-highlight-in-vim
+
+  " Get the existing syntax definition
+  redir => syntax_def
+  exe 'silent syn list' a:group
+  redir END
+  " Split into multiple lines
+  let lines = split(syntax_def, "\n")
+  " Clear the existing syntax definitions
+  exe 'syn clear' a:group
+  for line in lines
+    " Only parse the lines that mention the desired group
+    " (so don't try to parse the "--- Syntax items ---" line)
+    if line =~ a:group
+      " Get the required bits (the syntax type and the full definition)
+      let matcher = a:group . '\s\+xxx\s\+\(\k\+\)\s\+\(.*\)'
+      let type = substitute(line, matcher, '\1', '')
+      let definition = substitute(line, matcher, '\2', '')
+      " Either add or remove 'conceal' from the definition
+      if definition =~ 'conceal'
+	let definition = substitute(definition, ' conceal\>', '', '')
+	exe 'syn' type a:group definition
+      else
+	exe 'syn' type a:group definition 'conceal'
+      endif
+    endif
+  endfor
+endfunction
+
+" vim: fdm=marker:
