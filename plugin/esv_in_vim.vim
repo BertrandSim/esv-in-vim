@@ -37,7 +37,9 @@ EOF
   if bufwinnr('passages') <= 0
     exec 'noswapfile '.esv_split.' passages'
     " TODO [2019-12-30]: split options
-    call s:concealInit()
+    if has('conceal')
+      call s:concealInit()
+    endif
   endif
   let buf_num = bufwinnr('passages')
   exec buf_num.'wincmd w'
@@ -136,7 +138,9 @@ endif
 
 command! -nargs=+ ESV call s:esv_buffer('<args>')
 
-command! ToggleVerseNum call s:toggleGroupConceal('esvVerseNum')
+if has('conceal')
+  command! ToggleVerseNum call s:toggleGroupConceal('esvVerseNum')
+endif
 
 
 " conceal {{{1
