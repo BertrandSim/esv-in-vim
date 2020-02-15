@@ -41,6 +41,8 @@ def get_esv_text(passage):
         'include-short-copyright': False,
         'include-passage-references': True
     }
+    if vim.eval("has('conceal')"):
+        params['include-verse-numbers'] = True
 
     headers = {
         'Authorization': 'Token %s' % API_KEY
