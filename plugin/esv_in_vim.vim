@@ -1,5 +1,7 @@
 scriptencoding utf-8
 
+" initial checks {{{
+
 " check if +python3
 if !has('python3') 
   echoerr "python 3 is required"
@@ -12,6 +14,15 @@ if !get(g:, "esv_api_key")
   finish
 endif
 
+" load guard
+if get(g:, "loaded_esv_in_vim") 
+  finish 
+endif
+let g:loaded_esv_in_vim = 1
+
+" }}}
+
+" main {{{
 
 py3 from passage import get_esv_text
 " passage.py should be in {rtp}/python3/  
@@ -74,6 +85,7 @@ EOF
 endfunction
 
 function! s:esv_buf_op(type, ...)
+  " operator wrapper to main func s:esv_buffer()
   let reg_save = @@
 
   if a:0	" invoked from visual mode
@@ -91,6 +103,10 @@ function! s:esv_buf_op(type, ...)
 
   let @@ = reg_save
 endfunction
+
+" }}}
+
+" helpers {{{
 
 function! s:get_split_cmd()
   let esv_split = get(g:, 'esv_split', 'v')
@@ -124,7 +140,9 @@ function! s:optype2v(type)
   endif
 endfunction
 
-" enduser {{{1
+" }}}
+
+" enduser {{{
 nnoremap <silent> <Plug>(esv_in_vim) :<C-u>set opfunc=<SID>esv_buf_op<CR>g@
 vnoremap <silent> <Plug>(esv_in_vim) :<C-u>call <SID>esv_buf_op(visualmode(), 1)<CR>
 
@@ -142,8 +160,9 @@ if has('conceal')
   command! ToggleVerseNum call s:toggleGroupConceal('esvVerseNum')
 endif
 
+" }}}
 
-" conceal {{{1
+" conceal {{{
 function! s:concealInit()
 " called to setup conceal for window containing passages
   set conceallevel=2
@@ -185,5 +204,7 @@ function! s:toggleGroupConceal(group)
     endif
   endfor
 endfunction
+
+" }}}
 
 " vim: fdm=marker:
