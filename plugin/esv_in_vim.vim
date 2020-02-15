@@ -27,6 +27,8 @@ let g:loaded_esv_in_vim = 1
 py3 from passage import get_esv_text
 " passage.py should be in {rtp}/python3/  
 
+let s:passages_buf_counter = 0
+
 function! s:esv_buffer(passage)
 " puts a requested ESV Bible passage in vim buffer"
 
@@ -43,18 +45,26 @@ EOF
     return
   endif 
 
-  " move focus to 'passages' buffer"
-  let esv_split = s:get_split_cmd()
-  if bufwinnr('passages') <= 0
-    exec 'noswapfile '.esv_split.' passages'
+  " move focus to 'passages' buffer, if it exists,
+  " according to user opts
+  let win_passage_exists = s:goto_passage_win()
+  if !win_passage_exists
+    " otherwise, create a new buffer for passages
+    let esv_split = s:get_new_split_cmd()
+    let s:passages_buf_counter += 1
+    "  :split passages_n
+    if s:passages_buf_counter == 1 
+      exec 'noswapfile '.esv_split.' _passages_'
+    else
+      exec 'noswapfile '.esv_split.' _passages_'.s:passages_buf_counter
+    endif
     " TODO [2019-12-30]: split options
     if has('conceal')
       call s:concealInit()
     endif
   endif
-  let buf_num = bufwinnr('passages')
-  exec buf_num.'wincmd w'
-  
+
+
 py3 << EOF
 b = vim.current.buffer
 is_first_entry = len(b[:]) == 1 and b[0] == ''
@@ -123,19 +133,72 @@ endfunction
 
 " helpers {{{
 
-function! s:get_split_cmd()
-  let esv_split = get(g:, 'esv_split', 'v')
+function! s:goto_passage_win()
+  " jumps to window containing pasage buffer, based on the setting g:esv_use_existing
+  " returns 1 if possible, or 
+  " 0 if window does not exist / window does not meet user settings
 
-  let splitcmd = esv_split == 'h' || esv_split == 'horizontal' ? 'split'  :
-    \            esv_split == 'v' || esv_split == 'vertical'   ? 'vsplit' :
-    \            esv_split == 't' || esv_split == 'tabpage'    ? 'tabe'   :
-    \            esv_split == 'p' || esv_split == 'preview'    ? ''       :
+  let use_existing = get(g:, 'esv_use_existing', 'tabpage')
+
+  " if use_existing *notin* ['n', 'w', 't', 's']
+  if index( [
+    \ 'n', 'none', 
+    \ 'w', 'window',
+    \ 't', 'tabpage',
+    \ 's', 'session',
+    \], use_existing ) == -1
+    echoerr "'g:esv_use_existing' should be one of 'none'/'window'/'tabpage'/'session'." 
+  endif
+
+  if use_existing == 'n' || use_existing == 'none'
+    return 0
+  endif
+
+  let pattern = '^_passages_'
+
+  " check current window
+  if bufname('%') =~ pattern
+    return 1
+  elseif use_existing == 'w' || use_existing == 'window'
+    return 0
+  endif
+
+  " check current tabpage
+  let win_num = bufwinnr(pattern)
+  if win_num != -1
+    exec win_num.'wincmd w'
+    return 1
+  elseif use_existing == 't' || use_existing == 'tabpage'
+    return 0
+  endif
+
+  " check current session
+  let winids = bufnr(pattern)->win_findbuf()
+  if winids != []
+    call win_gotoid(winids[0])	" TODO: use other windows besides the first match?
+    return 1
+  else "if use_existing == 's' || use_existing == 'session'
+    return 0
+  endif
+
+endfunction
+
+function! s:get_new_split_cmd()
+  " returns passage buffer split command according to g:esv_new_split
+  let esv_split = get(g:, 'esv_new_split', 'h')
+
+  let splitcmd = esv_split == 'c' || esv_split =~ '\<cur\%[rent]\>'    ? 'edit'   :
+    \            esv_split == 'h' || esv_split =~ '\<hor\%[izontal]\>' ? 'split'  :
+    \            esv_split == 'v' || esv_split =~ '\<ver\%[tical]\>'   ? 'vsplit' :
+    \            esv_split == 't' || esv_split =~ '\<tab\%[page]\>'    ? 'tabe'   :
     \ 'default'
-    " TODO [2019-12-30]: check tab split option
-    " TODO [2019-12-30] add preview split
+    " \            esv_split == 'p' || esv_split =~ '\<pre\%[view]\>'    ? ''       :
+    " \            esv_split == 'o' || esv_split =~ '\<pop\%[up]\>'      ? ''       :
+    " TODO [2019-12-30] add open in preview window / popup window
   
   if splitcmd ==# 'default'
-    echoerr '"g:esv_split" type should be one of "p/h/v/t".' 
+    echoerr "'g:esv_new_split' should be one of 'c'/'h'/'v'/'t'." 
+    " echoerr "'g:esv_new_split' should be one of 'c'/'h'/'v'/'t'/'p'/'o'." 
   else
     return splitcmd
   endif
@@ -221,5 +284,19 @@ function! s:toggleGroupConceal(group)
 endfunction
 
 " }}}
+
+finish
+
+
+ROADMAP {{{
+------
+* toggle on/off passage refs, footnotes, headings, short_copyright
+* option to open in preview window, popup window
+* autoload
+* allow user to overwrite preferred settings with fn call
+
+}}}
+
+
 
 " vim: fdm=marker:
