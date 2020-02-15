@@ -151,7 +151,7 @@ function! s:concealInit()
 
   " conceal verse numbers by default
   syntax match esvVerseNum '\V[\d\+]' conceal
-  hi link esvVerseNum Number
+  hi link esvVerseNum Identifier
 endfunction
 
 
