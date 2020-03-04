@@ -154,7 +154,7 @@ if !hasmapto('<Plug>(esv_in_vim)', 'v')
   vmap <Leader>bb <Plug>(esv_in_vim)
 endif
 
-command! -nargs=+ ESV call s:esv_buffer('<args>')
+command! -nargs=+ ESV call s:esv_buffer(<q-args>)
 
 if has('conceal')
   command! ToggleVerseNum call s:toggleGroupConceal('esvVerseNum')
