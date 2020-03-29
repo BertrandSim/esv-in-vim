@@ -59,6 +59,9 @@ EOF
       exec 'noswapfile '.esv_split.' _passages_'.s:passages_buf_counter
     endif
     " TODO [2019-12-30]: split options
+    if get(g:, 'esv_autofit')
+      call esv_in_vim#autoformatInit()
+    endif
     if has('conceal')
       call s:concealInit()
     endif
