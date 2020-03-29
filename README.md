@@ -137,6 +137,16 @@ Text options:
 If enabled, smart single quotes `‘`,`’`, and smart double quotes `“`,`”` are preserved in the text.
 Otherwise, these are converted to straight quotes `'` and `"` respectively.
 
+* g:esv_new_split
+
+* g:esv_use_existing
+
+Display options: [TODO]
+
+* g:esv_autofit
+
+* g:esv_max_width
+
 ## Contributing
 Contact me through [github](https://github.com/BertrandSim/esv-in-vim).
 
