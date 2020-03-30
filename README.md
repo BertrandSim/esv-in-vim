@@ -141,11 +141,16 @@ Otherwise, these are converted to straight quotes `'` and `"` respectively.
 
 * g:esv_use_existing
 
-Display options: [TODO]
+Display options:
 
-* g:esv_autofit
+* g:esv_autofit (default: 1)
 
-* g:esv_max_width
+If enabled, hardwraps the scripture text to the width of the current window when references are loaded, or when the window is resized.
+If enabled, |esv_in_vim#fitWidth()| is called automatically.
+
+* g:esv_max_width (default: 78)
+
+Maximum allowable width before text is wrapped. Used in |esv_in_vim#fitWidth()|
 
 ## Contributing
 Contact me through [github](https://github.com/BertrandSim/esv-in-vim).
