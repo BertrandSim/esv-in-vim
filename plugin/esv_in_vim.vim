@@ -21,7 +21,6 @@ endif
 let g:loaded_esv_in_vim = 1
 
 " }}}
-
 " main {{{
 
 py3 from passage import get_esv_text
@@ -59,8 +58,8 @@ EOF
       exec 'noswapfile '.esv_split.' _passages_'.s:passages_buf_counter
     endif
     " TODO [2019-12-30]: split options
-    if get(g:, 'esv_autofit')
-      call esv_in_vim#autoformatInit()
+    if get(g:, 'esv_autofit', 1)
+      call esv_in_vim#autoWidthInit()
     endif
     if has('conceal')
       call s:concealInit()
@@ -110,6 +109,10 @@ if is_first_entry:
   del b[0]   
 EOF
 
+if get(g:, 'esv_autofit', 1)
+  call esv_in_vim#fitWidth()
+endif
+
 endfunction
 
 function! s:esv_buf_op(type, ...)
@@ -133,7 +136,6 @@ function! s:esv_buf_op(type, ...)
 endfunction
 
 " }}}
-
 " helpers {{{
 
 function! s:goto_passage_win()
@@ -222,8 +224,8 @@ function! s:optype2v(type)
 endfunction
 
 " }}}
-
 " enduser {{{
+
 nnoremap <silent> <Plug>(esv_in_vim) :<C-u>set opfunc=<SID>esv_buf_op<CR>g@
 vnoremap <silent> <Plug>(esv_in_vim) :<C-u>call <SID>esv_buf_op(visualmode(), 1)<CR>
 
@@ -242,8 +244,8 @@ if has('conceal')
 endif
 
 " }}}
-
 " conceal {{{
+
 function! s:concealInit()
 " called to setup conceal for window containing passages
   set conceallevel=2
@@ -286,6 +288,9 @@ function! s:toggleGroupConceal(group)
   endfor
 endfunction
 
+" }}}
+" fit-to-width {{{
+" see autoload/
 " }}}
 
 finish
