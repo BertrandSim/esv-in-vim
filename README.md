@@ -70,6 +70,13 @@ to your vimrc.
 
 window splits options: [TODO]
 
+Text options:
+
+* g:esv_smart_single_quotes (default: 0)
+* g:esv_smart_double_quotes (default: 0)
+
+If enabled, smart single quotes `‘`,`’`, and smart double quotes `“`,`”` are preserved in the text.
+Otherwise, these are converted to straight quotes `'` and `"` respectively.
 ## Contributing
 Contact me on [github](https://github.com/BertrandSim/esv-in-vim).
 
