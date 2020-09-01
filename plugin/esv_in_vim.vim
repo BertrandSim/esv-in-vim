@@ -68,6 +68,8 @@ if not is_first_entry:
     b.append(l)
 
 prev_line = len(b)
+b.vars['esv_prev_line'] = prev_line
+
 
 # put text(s) in 'passages' buffer
 passage_lines = passage_texts.splitlines()
@@ -76,7 +78,20 @@ for l in passage_lines:
 
 # place cursor on first passage ref
 w.cursor = (prev_line + 1, 0)
+EOF
 
+  " convert smart quotes to straight quotes, 
+  " unless specified otherwise by user opt
+  if !get(g:, 'esv_smart_single_quotes', 0)
+    silent! exec b:esv_prev_line+1.',$'."s/‘/'/g" 
+    silent! exec b:esv_prev_line+1.',$'."s/’/'/g" 
+  endif
+  if !get(g:, 'esv_smart_double_quotes', 0)
+    silent! exec b:esv_prev_line+1.',$'.'s/“/"/g' 
+    silent! exec b:esv_prev_line+1.',$'.'s/”/"/g' 
+  endif
+
+py3 << EOF
 # delete leading blank line
 if is_first_entry:
   del b[0]   
