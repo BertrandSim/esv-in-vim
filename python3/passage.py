@@ -39,7 +39,12 @@ def get_esv_text(passage):
         'include-footnotes': False,
         'include-verse-numbers': False,
         'include-short-copyright': False,
-        'include-passage-references': True
+        'include-passage-references': True,
+
+        'indent-using': 'space',
+        'indent-paragraphs': 2,
+        'indent-poetry': True,
+        'indent-poetry-lines': 4
     }
     if vim.eval("has('conceal')"):
         params['include-verse-numbers'] = True
