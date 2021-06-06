@@ -5,10 +5,16 @@ function! esv_in_vim#fitWidth()
   let curpos_save = getpos('.')
   let tw_save = &l:tw
 
+  " get appropriate text width for buffer
   let &l:tw = esv_in_vim#winTextWidth()
   let maxwidth = get(g:, 'esv_max_width', 78)
   let &l:tw = min( [ &l:tw, maxwidth ] )
-  normal! gggwG
+
+  " autoformat paragraphs beginning with 2 leading spaces
+  " do not touch those with !=2 leading spaces (eg poetry, 4 spaces)
+  silent! g/^ \{2}\S/normal! gwip
+  " workaround to ESV api error -- 4+2 leading spaces to paragraph that comes after poetry
+  silent! g/^ \{6}\S/normal! gwip4x
 
   let &l:tw = tw_save
   call setpos('.', curpos_save)
