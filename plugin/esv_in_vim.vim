@@ -87,9 +87,6 @@ b.vars['esv_prev_line'] = prev_line
 passage_lines = passage_texts.splitlines()
 for l in passage_lines:
   b.append(l)
-
-# place cursor on first passage ref
-w.cursor = (prev_line + 1, 0)
 EOF
 
   " convert smart quotes to straight quotes, 
@@ -103,15 +100,19 @@ EOF
     silent! exec b:esv_prev_line+1.',$'.'s/”/"/g' 
   endif
 
+  " autoflow text (after reference is added)
+  if get(g:, 'esv_autofit', 1)
+    call esv_in_vim#fitWidth()
+  endif
+
 py3 << EOF
+# place cursor on first passage ref
+w.cursor = (prev_line + 1, 0)
+
 # delete leading blank line
 if is_first_entry:
   del b[0]   
 EOF
-
-if get(g:, 'esv_autofit', 1)
-  call esv_in_vim#fitWidth()
-endif
 
 endfunction
 
