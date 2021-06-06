@@ -21,12 +21,7 @@ function! esv_in_vim#fitWidth()
 endfunction
 
 function! esv_in_vim#autoWidthInit()
-  " initializes autoformat using gw and fo=a
-  let &l:tw = esv_in_vim#winTextWidth()
-  setlocal formatoptions+=a
-  normal! gggwGgg
-
-  " autoformat when vim is resized
+  " setup autoformat when vim is resized
   " TODO [2020-03-29]: autoformat when local window is resized
   augroup esvFitWidth
     autocmd!
