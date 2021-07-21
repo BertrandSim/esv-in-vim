@@ -184,7 +184,7 @@ function! s:concealInit()
   set concealcursor=nc
 
   " conceal verse numbers by default
-  syntax match esvVerseNum '\V[\d\+] ' conceal
+  syntax match esvVerseNum '\[\d\+\]\( \|$\)' conceal
   hi link esvVerseNum Identifier
 endfunction
 
